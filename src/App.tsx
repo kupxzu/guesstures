@@ -798,7 +798,7 @@ const Footer = () => {
         </div>
           <div className="text-on-surface-variant text-sm text-center">
               © 2026 Guesstures Editorial. All rights reserved. <br /> 
-              Designed by <a href="https://kupxzu.github.io/carlkupxzu-portfolio/" className="text-cyan-400 hover:text-cyan-300 transition-colors">KUPXZU</a>  Guesstures Team.
+              Developed by <a href="https://kupxzu.github.io/carlkupxzu-portfolio/" className="text-cyan-400 hover:text-cyan-300 transition-colors">KUPXZU</a>  Guesstures Team.
           </div>
       </div>
     </footer>
