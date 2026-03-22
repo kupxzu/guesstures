@@ -8,10 +8,13 @@ import {
   Menu,
   X,
   Github,
-  Linkedin,
-  Twitter
+  Twitter,
+  Facebook,
+  CheckCircle,
+  Loader2
 } from "lucide-react";
 import React, { useState, useEffect, Suspense, useRef } from "react";
+import emailjs from '@emailjs/browser';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
@@ -417,8 +420,8 @@ const Hero = () => {
       </div>
 
       <div className="flex gap-4">
-        <a href="#" className="p-3 bg-surface-container-highest rounded-xl hover:bg-primary hover:text-background transition-all"><Github className="w-5 h-5" /></a>
-        <a href="#" className="p-3 bg-surface-container-highest rounded-xl hover:bg-primary hover:text-background transition-all"><Linkedin className="w-5 h-5" /></a>
+        <a href="https://github.com/guessturesdev-cell" className="p-3 bg-surface-container-highest rounded-xl hover:bg-primary hover:text-background transition-all"><Github className="w-5 h-5" /></a>
+        <a href="https://www.facebook.com/profile.php?id=61588659292244" className="p-3 bg-surface-container-highest rounded-xl hover:bg-primary hover:text-background transition-all"><Facebook className="w-5 h-5" /></a>
         <a href="#" className="p-3 bg-surface-container-highest rounded-xl hover:bg-primary hover:text-background transition-all"><Twitter className="w-5 h-5" /></a>
       </div>
     </div>
@@ -601,6 +604,60 @@ const TechStack = () => {
 };
 
 const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.name || !formData.email || !formData.message) {
+      return;
+    }
+
+    setStatus('sending');
+
+    try {
+      // EmailJS configuration from environment variables
+      const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+      const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+      const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+      await emailjs.send(
+        SERVICE_ID,
+        TEMPLATE_ID,
+        {
+          from_name: formData.name,
+          from_email: formData.email,
+          message: formData.message,
+          to_email: 'guesstures.dev@gmail.com'
+        },
+        PUBLIC_KEY
+      );
+
+      setStatus('success');
+      setFormData({ name: '', email: '', message: '' });
+      
+      // Reset to idle after 5 seconds
+      setTimeout(() => setStatus('idle'), 5000);
+    } catch (error) {
+      console.error('Email send failed:', error);
+      setStatus('error');
+      setTimeout(() => setStatus('idle'), 5000);
+    }
+  };
+
   return (
     <section id="contact" className="py-20 md:py-32 bg-surface px-4 sm:px-6 md:px-8 relative">
       <div className="max-w-7xl mx-auto">
@@ -635,35 +692,74 @@ const Contact = () => {
             viewport={{ once: true }}
             className="bg-surface-container p-8 md:p-12 rounded-xl"
           >
-            <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-              <div className="space-y-2">
-                <label className="text-xs uppercase font-bold tracking-widest text-outline-variant">Name</label>
-                <input 
-                  className="w-full bg-surface-container-highest/50 border-b border-outline-variant py-4 px-4 text-white placeholder:text-on-surface-variant focus:outline-none focus:border-primary transition-colors rounded-t-lg" 
-                  placeholder="Your Name" 
-                  type="text"
-                />
+            {status === 'success' ? (
+              <div className="flex flex-col items-center justify-center py-12 text-center space-y-4">
+                <CheckCircle className="w-16 h-16 text-green-500" />
+                <h3 className="text-2xl font-bold font-headline">Message Sent!</h3>
+                <p className="text-on-surface-variant">Thank you for reaching out. We'll get back to you within 24 hours.</p>
               </div>
-              <div className="space-y-2">
-                <label className="text-xs uppercase font-bold tracking-widest text-outline-variant">Email</label>
-                <input 
-                  className="w-full bg-surface-container-highest/50 border-b border-outline-variant py-4 px-4 text-white placeholder:text-on-surface-variant focus:outline-none focus:border-primary transition-colors rounded-t-lg" 
-                  placeholder="email@example.com" 
-                  type="email"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-xs uppercase font-bold tracking-widest text-outline-variant">Project Details</label>
-                <textarea 
-                  className="w-full bg-surface-container-highest/50 border-b border-outline-variant py-4 px-4 text-white placeholder:text-on-surface-variant focus:outline-none focus:border-primary transition-colors resize-none rounded-t-lg" 
-                  placeholder="Tell us about your project..." 
-                  rows={4}
-                ></textarea>
-              </div>
-              <button className="w-full bg-primary text-background py-5 rounded-lg font-bold font-headline text-lg hover:bg-on-surface-variant transition-all active:scale-95 flex items-center justify-center gap-2">
-                Send Message <ArrowRight className="w-5 h-5" />
-              </button>
-            </form>
+            ) : (
+              <form ref={formRef} className="space-y-6" onSubmit={handleSubmit}>
+                <div className="space-y-2">
+                  <label className="text-xs uppercase font-bold tracking-widest text-outline-variant">Name</label>
+                  <input 
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    className="w-full bg-surface-container-highest/50 border-b border-outline-variant py-4 px-4 text-white placeholder:text-on-surface-variant focus:outline-none focus:border-primary transition-colors rounded-t-lg" 
+                    placeholder="Your Name" 
+                    type="text"
+                    required
+                    disabled={status === 'sending'}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs uppercase font-bold tracking-widest text-outline-variant">Email</label>
+                  <input 
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full bg-surface-container-highest/50 border-b border-outline-variant py-4 px-4 text-white placeholder:text-on-surface-variant focus:outline-none focus:border-primary transition-colors rounded-t-lg" 
+                    placeholder="email@example.com" 
+                    type="email"
+                    required
+                    disabled={status === 'sending'}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs uppercase font-bold tracking-widest text-outline-variant">Project Details</label>
+                  <textarea 
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    className="w-full bg-surface-container-highest/50 border-b border-outline-variant py-4 px-4 text-white placeholder:text-on-surface-variant focus:outline-none focus:border-primary transition-colors resize-none rounded-t-lg" 
+                    placeholder="Tell us about your project..." 
+                    rows={4}
+                    required
+                    disabled={status === 'sending'}
+                  ></textarea>
+                </div>
+                {status === 'error' && (
+                  <p className="text-red-500 text-sm">Failed to send message. Please try again or email us directly.</p>
+                )}
+                <button 
+                  type="submit"
+                  disabled={status === 'sending'}
+                  className="w-full bg-primary text-background py-5 rounded-lg font-bold font-headline text-lg hover:bg-on-surface-variant transition-all active:scale-95 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                >
+                  {status === 'sending' ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      Send Message <ArrowRight className="w-5 h-5" />
+                    </>
+                  )}
+                </button>
+              </form>
+            )}
           </motion.div>
         </div>
       </div>
@@ -697,8 +793,8 @@ const Footer = () => {
         <div className="flex flex-wrap justify-center gap-8">
           <a className="text-on-surface-variant font-medium text-sm hover:text-white transition-colors" href="#">Privacy Policy</a>
           <a className="text-on-surface-variant font-medium text-sm hover:text-white transition-colors" href="#">Terms of Service</a>
-          <a className="text-on-surface-variant font-medium text-sm hover:text-white transition-colors" href="#">LinkedIn</a>
-          <a className="text-on-surface-variant font-medium text-sm hover:text-white transition-colors" href="#">GitHub</a>
+          {/* <a className="text-on-surface-variant font-medium text-sm hover:text-white transition-colors" href="#">LinkedIn</a> */}
+          <a className="text-on-surface-variant font-medium text-sm hover:text-white transition-colors" href="https://github.com/guessturesdev-cell">GitHub</a>
         </div>
           <div className="text-on-surface-variant text-sm text-center">
               © 2026 Guesstures Editorial. All rights reserved. <br /> 
