@@ -1,9 +1,9 @@
 import { motion, AnimatePresence } from "motion/react";
-import { 
-  Mail, 
-  MapPin, 
-  Layers, 
-  Zap, 
+import {
+  Mail,
+  MapPin,
+  Layers,
+  Zap,
   ArrowRight,
   Menu,
   X,
@@ -24,27 +24,27 @@ const DiamondFrame = React.memo(({ position, color, rotationY = 0 }: { position:
   const size = 2;
   const thickness = 0.35;
   const depth = 0.35;
-  
+
   // Create the frame using 4 boxes
   return (
     <group position={position} rotation={[0, rotationY, Math.PI / 4]}>
       {/* Top bar */}
-      <mesh position={[0, size/2, 0]}>
+      <mesh position={[0, size / 2, 0]}>
         <boxGeometry args={[size + thickness, thickness, depth]} />
         <meshStandardMaterial color={color} metalness={0.3} roughness={0.4} />
       </mesh>
       {/* Bottom bar */}
-      <mesh position={[0, -size/2, 0]}>
+      <mesh position={[0, -size / 2, 0]}>
         <boxGeometry args={[size + thickness, thickness, depth]} />
         <meshStandardMaterial color={color} metalness={0.3} roughness={0.4} />
       </mesh>
       {/* Left bar */}
-      <mesh position={[-size/2, 0, 0]}>
+      <mesh position={[-size / 2, 0, 0]}>
         <boxGeometry args={[thickness, size - thickness, depth]} />
         <meshStandardMaterial color={color} metalness={0.3} roughness={0.4} />
       </mesh>
       {/* Right bar */}
-      <mesh position={[size/2, 0, 0]}>
+      <mesh position={[size / 2, 0, 0]}>
         <boxGeometry args={[thickness, size - thickness, depth]} />
         <meshStandardMaterial color={color} metalness={0.3} roughness={0.4} />
       </mesh>
@@ -53,15 +53,15 @@ const DiamondFrame = React.memo(({ position, color, rotationY = 0 }: { position:
 });
 
 // Custom floating animation using useFrame (avoids deprecated THREE.Clock)
-const FloatingGroup = ({ children, speed = 1, floatIntensity = 0.8, rotationIntensity = 0.4 }: { 
-  children: React.ReactNode, 
-  speed?: number, 
-  floatIntensity?: number, 
-  rotationIntensity?: number 
+const FloatingGroup = ({ children, speed = 1, floatIntensity = 0.8, rotationIntensity = 0.4 }: {
+  children: React.ReactNode,
+  speed?: number,
+  floatIntensity?: number,
+  rotationIntensity?: number
 }) => {
   const groupRef = useRef<THREE.Group>(null);
   const timeRef = useRef(0);
-  
+
   useFrame((_, delta) => {
     if (!groupRef.current) return;
     timeRef.current += delta * speed;
@@ -70,7 +70,7 @@ const FloatingGroup = ({ children, speed = 1, floatIntensity = 0.8, rotationInte
     groupRef.current.rotation.x = Math.sin(t * 0.5) * rotationIntensity * 0.1;
     groupRef.current.rotation.z = Math.cos(t * 0.3) * rotationIntensity * 0.05;
   });
-  
+
   return <group ref={groupRef}>{children}</group>;
 };
 
@@ -80,7 +80,7 @@ const Scene3D = React.memo(() => {
       <ambientLight intensity={0.7} />
       <pointLight position={[10, 10, 10]} intensity={1} />
       <directionalLight position={[0, 5, 5]} intensity={0.8} />
-      
+
       <FloatingGroup speed={1} rotationIntensity={0.4} floatIntensity={0.8}>
         <group scale={0.7} position={[0, 0, 0]}>
           {/* White diamond - left */}
@@ -99,7 +99,7 @@ const Scene3D = React.memo(() => {
 
 const InteractiveLogo = React.memo(() => {
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 1, delay: 0.2 }}
@@ -107,10 +107,10 @@ const InteractiveLogo = React.memo(() => {
     >
       <div className="relative w-full max-w-xs sm:max-w-sm md:max-w-md aspect-square bg-surface-container rounded-3xl overflow-hidden group cursor-grab active:cursor-grabbing">
         <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-50 pointer-events-none z-10"></div>
-        
+
         <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-white/20">Loading...</div>}>
-          <Canvas 
-            camera={{ position: [0, 0, 10], fov: 30 }} 
+          <Canvas
+            camera={{ position: [0, 0, 10], fov: 30 }}
             dpr={[1, 1.5]}
             performance={{ min: 0.5 }}
           >
@@ -155,24 +155,24 @@ const Navbar = () => {
                      M 230 -270 H -230 A 40 40 0 0 0 -270 -230 V 230 A 40 40 0 0 0 -230 270 H 230 A 40 40 0 0 0 270 230 V -230 A 40 40 0 0 0 230 -270 Z"/>
               </defs>
               <g transform="translate(590 1000) rotate(45)">
-                <use href="#ring" fill="#ffffff"/>
+                <use href="#ring" fill="#ffffff" />
               </g>
               <g transform="translate(983 1000) rotate(45)">
-                <use href="#ring" fill="#a1a1aa"/>
+                <use href="#ring" fill="#a1a1aa" />
               </g>
               <g transform="translate(1347 1000) rotate(45)">
-                <use href="#ring" fill="#52525b"/>
+                <use href="#ring" fill="#52525b" />
               </g>
             </svg>
             <span className="text-xl font-bold font-headline tracking-tight">GUESSTURES</span>
           </a>
-          
+
           {/* Desktop Links */}
           <div className="hidden md:flex gap-8 items-center">
             {navLinks.map((link) => (
-              <a 
+              <a
                 key={link.name}
-                href={link.href} 
+                href={link.href}
                 className="text-sm font-medium font-headline tracking-tight text-on-surface-variant hover:text-white transition-colors"
               >
                 {link.name}
@@ -181,15 +181,15 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center gap-4">
-            <button 
+            <button
               onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
               className="hidden sm:block bg-primary text-background px-6 py-2 rounded-lg font-bold font-headline text-sm hover:bg-on-surface-variant transition-colors"
             >
               Get in Touch
             </button>
-            
+
             {/* Mobile Toggle */}
-            <button 
+            <button
               className="md:hidden text-white p-2"
               onClick={() => setMobileMenuOpen(true)}
             >
@@ -202,7 +202,7 @@ const Navbar = () => {
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: "100%" }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
@@ -218,13 +218,13 @@ const Navbar = () => {
                          M 230 -270 H -230 A 40 40 0 0 0 -270 -230 V 230 A 40 40 0 0 0 -230 270 H 230 A 40 40 0 0 0 270 230 V -230 A 40 40 0 0 0 230 -270 Z"/>
                   </defs>
                   <g transform="translate(590 1000) rotate(45)">
-                    <use href="#ring-mobile" fill="#ffffff"/>
+                    <use href="#ring-mobile" fill="#ffffff" />
                   </g>
                   <g transform="translate(983 1000) rotate(45)">
-                    <use href="#ring-mobile" fill="#a1a1aa"/>
+                    <use href="#ring-mobile" fill="#a1a1aa" />
                   </g>
                   <g transform="translate(1347 1000) rotate(45)">
-                    <use href="#ring-mobile" fill="#52525b"/>
+                    <use href="#ring-mobile" fill="#52525b" />
                   </g>
                 </svg>
                 <span className="text-xl font-bold font-headline tracking-tight">GUESSTURES</span>
@@ -235,16 +235,16 @@ const Navbar = () => {
             </div>
             <div className="flex flex-col gap-8">
               {navLinks.map((link) => (
-                <a 
+                <a
                   key={link.name}
-                  href={link.href} 
+                  href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
                   className="text-4xl font-bold font-headline tracking-tighter hover:text-on-surface-variant transition-colors"
                 >
                   {link.name}
                 </a>
               ))}
-              <button 
+              <button
                 onClick={() => {
                   setMobileMenuOpen(false);
                   document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
@@ -266,20 +266,20 @@ const Modal = ({ isOpen, onClose, children }: { isOpen: boolean, onClose: () => 
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
             className="absolute inset-0 bg-background/80 backdrop-blur-md"
           />
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             className="relative bg-surface-container w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl shadow-2xl ghost-border"
           >
-            <button 
+            <button
               onClick={onClose}
               className="absolute top-6 right-6 p-2 bg-surface-container-highest rounded-full hover:bg-white hover:text-background transition-all z-10"
             >
@@ -321,14 +321,14 @@ const CodeBackground = React.memo(() => {
           <div key={i}>{line}</div>
         ))}
       </div>
-      
+
       {/* Right column - scrolling down (hidden on mobile) */}
       <div className="absolute right-[5%] top-0 hidden md:flex flex-col gap-4 text-[10px] md:text-xs font-mono text-white/[0.03] whitespace-nowrap code-scroll-down">
         {doubledLines.map((line, i) => (
           <div key={i}>{line}</div>
         ))}
       </div>
-      
+
       {/* Center column - scrolling up slowly (hidden until lg) */}
       <div className="absolute left-1/2 -translate-x-1/2 top-0 flex-col gap-4 text-[10px] md:text-xs font-mono text-white/[0.02] whitespace-nowrap hidden lg:flex code-scroll-slow">
         {doubledLines.map((line, i) => (
@@ -347,31 +347,31 @@ const Hero = () => {
       <section className="relative min-h-screen flex items-center pt-20 px-4 sm:px-6 md:px-8 overflow-hidden">
         {/* Animated code background */}
         <CodeBackground />
-        
+
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-br from-surface-container-highest to-transparent rounded-full blur-[120px]"></div>
         </div>
         <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center relative z-10">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="space-y-8"
           >
             <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-extrabold font-headline tracking-tighter leading-[0.9]">
-              We Build <br/><span className="text-on-surface-variant">What You Need.</span>
+              We Build <br /><span className="text-on-surface-variant">What You Need.</span>
             </h1>
             <p className="text-lg md:text-xl text-on-surface-variant max-w-lg leading-relaxed">
               From custom web applications to scalable mobile solutions, Guesstures delivers high-performance tech tailored to your vision.
             </p>
             <div className="flex flex-wrap gap-4 pt-4">
-              <button 
+              <button
                 onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
                 className="bg-primary text-background px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-bold font-headline text-base sm:text-lg hover:bg-on-surface-variant transition-all active:scale-95"
               >
                 Start Your Project
               </button>
-              <button 
+              <button
                 onClick={() => setIsModalOpen(true)}
                 className="ghost-border text-primary px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-bold font-headline text-base sm:text-lg hover:bg-surface-container transition-all active:scale-95"
               >
@@ -382,60 +382,60 @@ const Hero = () => {
           <InteractiveLogo />
         </div>
       </section>
-<Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-  <div className="p-4 sm:p-8 md:p-12 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-    <div className="space-y-6">
-      <div className="inline-block px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold uppercase tracking-widest">
-        The Founding Trio
-      </div>
-      
-      <h2 className="text-4xl md:text-5xl font-extrabold font-headline tracking-tight uppercase">
-        Guesturess
-      </h2>
-      
-      <p className="text-on-surface-variant leading-relaxed text-lg">
-        GUESTURESS is the result of three dedicated programmers coming together to solve complex digital challenges. Our foundation is built on a shared obsession with clean code and high-performance architecture.
-      </p>
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <div className="p-4 sm:p-8 md:p-12 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+          <div className="space-y-6">
+            <div className="inline-block px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold uppercase tracking-widest">
+              The Founding Trio
+            </div>
 
-      {/* The 3 Diamonds Explanation */}
-      <div className="pt-4 border-t border-surface-container-highest">
-        <h4 className="text-sm font-bold uppercase tracking-widest text-primary mb-4">The Symbolism</h4>
-        <div className="grid grid-cols-3 gap-2 text-center">
-          <div className="space-y-1">
-            <div className="w-2 h-2 rotate-45 bg-white border border-outline mx-auto mb-2"></div>
-            <p className="text-[10px] font-bold uppercase">Pure Craft</p>
+            <h2 className="text-4xl md:text-5xl font-extrabold font-headline tracking-tight uppercase">
+              Guesturess
+            </h2>
+
+            <p className="text-on-surface-variant leading-relaxed text-lg">
+              GUESTURESS is the result of three dedicated programmers coming together to solve complex digital challenges. Our foundation is built on a shared obsession with clean code and high-performance architecture.
+            </p>
+
+            {/* The 3 Diamonds Explanation */}
+            <div className="pt-4 border-t border-surface-container-highest">
+              <h4 className="text-sm font-bold uppercase tracking-widest text-primary mb-4">The Symbolism</h4>
+              <div className="grid grid-cols-3 gap-2 text-center">
+                <div className="space-y-1">
+                  <div className="w-2 h-2 rotate-45 bg-white border border-outline mx-auto mb-2"></div>
+                  <p className="text-[10px] font-bold uppercase">Pure Craft</p>
+                </div>
+                <div className="space-y-1">
+                  <div className="w-2 h-2 rotate-45 bg-gray-500 mx-auto mb-2"></div>
+                  <p className="text-[10px] font-bold uppercase">Scalable Logic</p>
+                </div>
+                <div className="space-y-1">
+                  <div className="w-2 h-2 rotate-45 bg-black mx-auto mb-2"></div>
+                  <p className="text-[10px] font-bold uppercase">Elegant Design</p>
+                </div>
+              </div>
+              <p className="mt-4 text-sm italic text-on-surface-variant">
+                "The three interlocking diamonds represent our individual expertise woven into a single, unbreakable vision."
+              </p>
+            </div>
+
+            <div className="flex gap-4">
+              <a href="https://github.com/guessturesdev-cell" className="p-3 bg-surface-container-highest rounded-xl hover:bg-primary hover:text-background transition-all"><Github className="w-5 h-5" /></a>
+              <a href="https://www.facebook.com/profile.php?id=61588659292244" className="p-3 bg-surface-container-highest rounded-xl hover:bg-primary hover:text-background transition-all"><Facebook className="w-5 h-5" /></a>
+              <a href="#" className="p-3 bg-surface-container-highest rounded-xl hover:bg-primary hover:text-background transition-all"><Twitter className="w-5 h-5" /></a>
+            </div>
           </div>
-          <div className="space-y-1">
-            <div className="w-2 h-2 rotate-45 bg-gray-500 mx-auto mb-2"></div>
-            <p className="text-[10px] font-bold uppercase">Scalable Logic</p>
-          </div>
-          <div className="space-y-1">
-            <div className="w-2 h-2 rotate-45 bg-black mx-auto mb-2"></div>
-            <p className="text-[10px] font-bold uppercase">Elegant Design</p>
+
+          {/* Right Side: Logo Display */}
+          <div className="relative aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-300 flex items-center justify-center">
+            <img
+              src={`${import.meta.env.BASE_URL}guesstures.jpg`}
+              alt="Guesturess Interlocking Diamonds Logo"
+              className="w-full h-auto drop-shadow-2xl"
+            />
           </div>
         </div>
-        <p className="mt-4 text-sm italic text-on-surface-variant">
-          "The three interlocking diamonds represent our individual expertise woven into a single, unbreakable vision."
-        </p>
-      </div>
-
-      <div className="flex gap-4">
-        <a href="https://github.com/guessturesdev-cell" className="p-3 bg-surface-container-highest rounded-xl hover:bg-primary hover:text-background transition-all"><Github className="w-5 h-5" /></a>
-        <a href="https://www.facebook.com/profile.php?id=61588659292244" className="p-3 bg-surface-container-highest rounded-xl hover:bg-primary hover:text-background transition-all"><Facebook className="w-5 h-5" /></a>
-        <a href="#" className="p-3 bg-surface-container-highest rounded-xl hover:bg-primary hover:text-background transition-all"><Twitter className="w-5 h-5" /></a>
-      </div>
-    </div>
-
-    {/* Right Side: Logo Display */}
-    <div className="relative aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-300 flex items-center justify-center">
-      <img 
-        src={`${import.meta.env.BASE_URL}guesstures.jpg`}
-        alt="Guesturess Interlocking Diamonds Logo" 
-        className="w-full h-auto drop-shadow-2xl"
-      />
-    </div>
-  </div>
-</Modal>
+      </Modal>
     </>
   );
 };
@@ -449,7 +449,7 @@ const Philosophy = () => {
             <h2 className="text-sm uppercase tracking-[0.3em] font-bold text-outline-variant">Our Philosophy</h2>
           </div>
           <div className="lg:col-span-8">
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -458,7 +458,7 @@ const Philosophy = () => {
               We are a flexible, tech-driven partner helping clients worldwide navigate the complexity of modern digital infrastructure. We don't just write code; we architect solutions.
             </motion.p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mt-20">
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
@@ -468,7 +468,7 @@ const Philosophy = () => {
                 <h3 className="text-xl font-bold font-headline">Scalable Architecture</h3>
                 <p className="text-on-surface-variant leading-relaxed">Systems built to handle growth without compromising on speed or reliability.</p>
               </motion.div>
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
@@ -491,31 +491,31 @@ const Projects = () => {
     {
       title: "E-Commers Platform",
       category: "Digital Commerce",
-      image: `${import.meta.env.BASE_URL}dashboard.png`,
+      image: `${import.meta.env.BASE_URL}dashboard.webp`,
       span: "md:col-span-3"
     },
     {
       title: "Application Development",
       category: "Software Solutions",
-      image: `${import.meta.env.BASE_URL}android.png`,
+      image: `${import.meta.env.BASE_URL}android.webp`,
       span: "md:col-span-3"
     },
     {
       title: "Web/Applicaiton Development",
       category: "Full Stack",
-      image: `${import.meta.env.BASE_URL}webapp.png`,
+      image: `${import.meta.env.BASE_URL}webapp.webp`,
       span: "md:col-span-2"
     },
     {
       title: "Finest Unique Design UI/UX",
       category: "Creative Direction",
-      image: `${import.meta.env.BASE_URL}uiux.jpg`,
+      image: `${import.meta.env.BASE_URL}uiux.webp`,
       span: "md:col-span-2"
     },
     {
       title: "Game Development",
       category: "Immersive Media",
-      image: `${import.meta.env.BASE_URL}gamedev.png`,
+      image: `${import.meta.env.BASE_URL}gamedev.webp`,
       span: "md:col-span-2"
     }
   ];
@@ -529,7 +529,7 @@ const Projects = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-6 gap-6">
           {projects.map((project, index) => (
-            <motion.div 
+            <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -538,9 +538,9 @@ const Projects = () => {
               className={`${project.span} bg-surface-container rounded-xl overflow-hidden group cursor-pointer`}
             >
               <div className="aspect-video relative overflow-hidden">
-                <img 
-                  src={project.image} 
-                  alt={project.title} 
+                <img
+                  src={project.image}
+                  alt={project.title}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   referrerPolicy="no-referrer"
                 />
@@ -581,15 +581,15 @@ const TechStack = () => {
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-px bg-outline-variant/20 rounded-xl border border-outline-variant/20 overflow-hidden">
           {stack.map((tech, index) => (
-            <motion.div 
+            <motion.div
               key={index}
               whileHover={{ backgroundColor: "rgba(58, 57, 57, 0.5)" }}
               className="bg-surface p-8 flex flex-col items-center justify-center gap-4 transition-colors cursor-default group"
             >
               <div className="w-12 h-12 flex items-center justify-center grayscale group-hover:grayscale-0 transition-all duration-500">
-                <img 
-                  src={tech.icon} 
-                  alt={tech.name} 
+                <img
+                  src={tech.icon}
+                  alt={tech.name}
                   className="w-10 h-10 object-contain"
                   referrerPolicy="no-referrer"
                 />
@@ -621,7 +621,7 @@ const Contact = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.name || !formData.email || !formData.message) {
       return;
     }
@@ -648,7 +648,7 @@ const Contact = () => {
 
       setStatus('success');
       setFormData({ name: '', email: '', message: '' });
-      
+
       // Reset to idle after 5 seconds
       setTimeout(() => setStatus('idle'), 5000);
     } catch (error) {
@@ -663,7 +663,7 @@ const Contact = () => {
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
           <div className="space-y-8">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold font-headline tracking-tight">Let's build <br/>together.</h2>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold font-headline tracking-tight">Let's build <br />together.</h2>
             <p className="text-xl text-on-surface-variant max-w-md">Ready to start your next project? Drop us a line and our technical lead will get back to you within 24 hours.</p>
             <div className="space-y-6 pt-8">
               <div className="flex items-center gap-4">
@@ -686,7 +686,7 @@ const Contact = () => {
               </div>
             </div>
           </div>
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -702,12 +702,12 @@ const Contact = () => {
               <form ref={formRef} className="space-y-6" onSubmit={handleSubmit}>
                 <div className="space-y-2">
                   <label className="text-xs uppercase font-bold tracking-widest text-outline-variant">Name</label>
-                  <input 
+                  <input
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full bg-surface-container-highest/50 border-b border-outline-variant py-4 px-4 text-white placeholder:text-on-surface-variant focus:outline-none focus:border-primary transition-colors rounded-t-lg" 
-                    placeholder="Your Name" 
+                    className="w-full bg-surface-container-highest/50 border-b border-outline-variant py-4 px-4 text-white placeholder:text-on-surface-variant focus:outline-none focus:border-primary transition-colors rounded-t-lg"
+                    placeholder="Your Name"
                     type="text"
                     required
                     disabled={status === 'sending'}
@@ -715,12 +715,12 @@ const Contact = () => {
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs uppercase font-bold tracking-widest text-outline-variant">Email</label>
-                  <input 
+                  <input
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full bg-surface-container-highest/50 border-b border-outline-variant py-4 px-4 text-white placeholder:text-on-surface-variant focus:outline-none focus:border-primary transition-colors rounded-t-lg" 
-                    placeholder="email@example.com" 
+                    className="w-full bg-surface-container-highest/50 border-b border-outline-variant py-4 px-4 text-white placeholder:text-on-surface-variant focus:outline-none focus:border-primary transition-colors rounded-t-lg"
+                    placeholder="email@example.com"
                     type="email"
                     required
                     disabled={status === 'sending'}
@@ -728,12 +728,12 @@ const Contact = () => {
                 </div>
                 <div className="space-y-2">
                   <label className="text-xs uppercase font-bold tracking-widest text-outline-variant">Project Details</label>
-                  <textarea 
+                  <textarea
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
-                    className="w-full bg-surface-container-highest/50 border-b border-outline-variant py-4 px-4 text-white placeholder:text-on-surface-variant focus:outline-none focus:border-primary transition-colors resize-none rounded-t-lg" 
-                    placeholder="Tell us about your project..." 
+                    className="w-full bg-surface-container-highest/50 border-b border-outline-variant py-4 px-4 text-white placeholder:text-on-surface-variant focus:outline-none focus:border-primary transition-colors resize-none rounded-t-lg"
+                    placeholder="Tell us about your project..."
                     rows={4}
                     required
                     disabled={status === 'sending'}
@@ -742,7 +742,7 @@ const Contact = () => {
                 {status === 'error' && (
                   <p className="text-red-500 text-sm">Failed to send message. Please try again or email us directly.</p>
                 )}
-                <button 
+                <button
                   type="submit"
                   disabled={status === 'sending'}
                   className="w-full bg-primary text-background py-5 rounded-lg font-bold font-headline text-lg hover:bg-on-surface-variant transition-all active:scale-95 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
@@ -779,13 +779,13 @@ const Footer = () => {
                    M 230 -270 H -230 A 40 40 0 0 0 -270 -230 V 230 A 40 40 0 0 0 -230 270 H 230 A 40 40 0 0 0 270 230 V -230 A 40 40 0 0 0 230 -270 Z"/>
             </defs>
             <g transform="translate(590 1000) rotate(45)">
-              <use href="#ring-footer" fill="#ffffff"/>
+              <use href="#ring-footer" fill="#ffffff" />
             </g>
             <g transform="translate(983 1000) rotate(45)">
-              <use href="#ring-footer" fill="#a1a1aa"/>
+              <use href="#ring-footer" fill="#a1a1aa" />
             </g>
             <g transform="translate(1347 1000) rotate(45)">
-              <use href="#ring-footer" fill="#52525b"/>
+              <use href="#ring-footer" fill="#52525b" />
             </g>
           </svg>
           <span className="text-lg font-bold font-headline tracking-tight">GUESSTURES</span>
@@ -796,10 +796,10 @@ const Footer = () => {
           {/* <a className="text-on-surface-variant font-medium text-sm hover:text-white transition-colors" href="#">LinkedIn</a> */}
           <a className="text-on-surface-variant font-medium text-sm hover:text-white transition-colors" href="https://github.com/guessturesdev-cell">GitHub</a>
         </div>
-          <div className="text-on-surface-variant text-sm text-center">
-              © 2026 Guesstures Editorial. All rights reserved. <br /> 
-              Developed by <a href="https://kupxzu.github.io/carlkupxzu-portfolio/" className="text-cyan-400 hover:text-cyan-300 transition-colors">KUPXZU</a>  Guesstures Team.
-          </div>
+        <div className="text-on-surface-variant text-sm text-center">
+          © 2026 Guesstures Editorial. All rights reserved. <br />
+          Developed by <a href="https://kupxzu.github.io/carlkupxzu-portfolio/" className="text-cyan-400 hover:text-cyan-300 transition-colors">KUPXZU</a>  Guesstures Team.
+        </div>
       </div>
     </footer>
   );
