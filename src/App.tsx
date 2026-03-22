@@ -11,10 +11,10 @@ import {
   Linkedin,
   Twitter
 } from "lucide-react";
-import React, { useState, useEffect, Suspense } from "react";
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Float } from '@react-three/drei';
-// import * as THREE from 'three';
+import React, { useState, useEffect, Suspense, useRef } from "react";
+import { Canvas, useFrame } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
+import * as THREE from 'three';
 
 // Create a hollow square frame (diamond when rotated) - Memoized
 const DiamondFrame = React.memo(({ position, color, rotationY = 0 }: { position: [number, number, number], color: string, rotationY?: number }) => {
@@ -49,6 +49,28 @@ const DiamondFrame = React.memo(({ position, color, rotationY = 0 }: { position:
   );
 });
 
+// Custom floating animation using useFrame (avoids deprecated THREE.Clock)
+const FloatingGroup = ({ children, speed = 1, floatIntensity = 0.8, rotationIntensity = 0.4 }: { 
+  children: React.ReactNode, 
+  speed?: number, 
+  floatIntensity?: number, 
+  rotationIntensity?: number 
+}) => {
+  const groupRef = useRef<THREE.Group>(null);
+  const timeRef = useRef(0);
+  
+  useFrame((_, delta) => {
+    if (!groupRef.current) return;
+    timeRef.current += delta * speed;
+    const t = timeRef.current;
+    groupRef.current.position.y = Math.sin(t) * floatIntensity * 0.1;
+    groupRef.current.rotation.x = Math.sin(t * 0.5) * rotationIntensity * 0.1;
+    groupRef.current.rotation.z = Math.cos(t * 0.3) * rotationIntensity * 0.05;
+  });
+  
+  return <group ref={groupRef}>{children}</group>;
+};
+
 const Scene3D = React.memo(() => {
   return (
     <>
@@ -56,7 +78,7 @@ const Scene3D = React.memo(() => {
       <pointLight position={[10, 10, 10]} intensity={1} />
       <directionalLight position={[0, 5, 5]} intensity={0.8} />
       
-      <Float speed={1} rotationIntensity={0.4} floatIntensity={0.8}>
+      <FloatingGroup speed={1} rotationIntensity={0.4} floatIntensity={0.8}>
         <group scale={0.7} position={[0, 0, 0]}>
           {/* White diamond - left */}
           <DiamondFrame position={[-1.4, 0, 0.3]} color="#FFFFFF" rotationY={0} />
@@ -65,7 +87,7 @@ const Scene3D = React.memo(() => {
           {/* Black diamond - right */}
           <DiamondFrame position={[1.4, 0, -0.3]} color="#1a1a1a" rotationY={0} />
         </group>
-      </Float>
+      </FloatingGroup>
 
       <OrbitControls enableZoom={false} enablePan={false} enableDamping dampingFactor={0.05} />
     </>
