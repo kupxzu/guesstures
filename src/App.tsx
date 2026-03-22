@@ -11,13 +11,13 @@ import {
   Linkedin,
   Twitter
 } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Float } from '@react-three/drei';
 // import * as THREE from 'three';
 
-// Create a hollow square frame (diamond when rotated)
-const DiamondFrame = ({ position, color, rotationY = 0 }: { position: [number, number, number], color: string, rotationY?: number }) => {
+// Create a hollow square frame (diamond when rotated) - Memoized
+const DiamondFrame = React.memo(({ position, color, rotationY = 0 }: { position: [number, number, number], color: string, rotationY?: number }) => {
   const size = 2;
   const thickness = 0.35;
   const depth = 0.35;
@@ -47,17 +47,16 @@ const DiamondFrame = ({ position, color, rotationY = 0 }: { position: [number, n
       </mesh>
     </group>
   );
-};
+});
 
-const Scene3D = () => {
+const Scene3D = React.memo(() => {
   return (
     <>
       <ambientLight intensity={0.7} />
-      <pointLight position={[10, 10, 10]} intensity={1.5} />
-      <pointLight position={[-10, -10, -10]} intensity={0.5} />
-      <directionalLight position={[0, 5, 5]} intensity={1} />
+      <pointLight position={[10, 10, 10]} intensity={1} />
+      <directionalLight position={[0, 5, 5]} intensity={0.8} />
       
-      <Float speed={1.5} rotationIntensity={0.8} floatIntensity={1.5}>
+      <Float speed={1} rotationIntensity={0.4} floatIntensity={0.8}>
         <group scale={0.7} position={[0, 0, 0]}>
           {/* White diamond - left */}
           <DiamondFrame position={[-1.4, 0, 0.3]} color="#FFFFFF" rotationY={0} />
@@ -68,12 +67,12 @@ const Scene3D = () => {
         </group>
       </Float>
 
-      <OrbitControls enableZoom={false} enablePan={false} />
+      <OrbitControls enableZoom={false} enablePan={false} enableDamping dampingFactor={0.05} />
     </>
   );
-};
+});
 
-const InteractiveLogo = () => {
+const InteractiveLogo = React.memo(() => {
   return (
     <motion.div 
       initial={{ opacity: 0, scale: 0.9 }}
@@ -84,9 +83,15 @@ const InteractiveLogo = () => {
       <div className="relative w-full max-w-xs sm:max-w-sm md:max-w-md aspect-square bg-surface-container rounded-3xl overflow-hidden group cursor-grab active:cursor-grabbing">
         <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-50 pointer-events-none z-10"></div>
         
-        <Canvas camera={{ position: [0, 0, 10], fov: 30 }}>
-          <Scene3D />
-        </Canvas>
+        <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-white/20">Loading...</div>}>
+          <Canvas 
+            camera={{ position: [0, 0, 10], fov: 30 }} 
+            dpr={[1, 1.5]}
+            performance={{ min: 0.5 }}
+          >
+            <Scene3D />
+          </Canvas>
+        </Suspense>
 
         <div className="absolute bottom-4 left-0 right-0 text-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
           <span className="text-[10px] text-white/40 uppercase tracking-widest font-bold">Touch to rotate vision</span>
@@ -94,7 +99,7 @@ const InteractiveLogo = () => {
       </div>
     </motion.div>
   );
-};
+});
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -263,72 +268,51 @@ const Modal = ({ isOpen, onClose, children }: { isOpen: boolean, onClose: () => 
   );
 };
 
-// Animated code lines for background effect
-const CodeBackground = () => {
+// Animated code lines for background effect - Optimized with CSS animations
+const CodeBackground = React.memo(() => {
   const codeLines = [
     "const app = createServer({ port: 3000 });",
     "import { useState, useEffect } from 'react';",
     "async function fetchData(url: string) {",
-    "  const response = await fetch(url);",
     "  return response.json();",
-    "}",
     "export default function App() {",
     "  const [data, setData] = useState(null);",
     "router.get('/api/users', async (req, res) => {",
-    "  const users = await User.findAll();",
     "  res.json(users);",
-    "});",
     "const config = { theme: 'dark', lang: 'en' };",
     "class Component extends React.PureComponent {",
-    "  render() { return <div>{this.props.children}</div>; }",
-    "}",
-    "SELECT * FROM projects WHERE status = 'active';",
     "npm install @tailwindcss/typography",
-    "docker-compose up -d --build",
     "git push origin main --force-with-lease",
-    "const api = axios.create({ baseURL: '/api' });",
-    "useEffect(() => { loadData(); }, []);",
-    "type User = { id: string; name: string; };",
-    "interface Config { debug: boolean; }",
   ];
+
+  // Pre-compute doubled array once
+  const doubledLines = [...codeLines, ...codeLines];
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
       {/* Left column - scrolling up (only column on mobile) */}
-      <motion.div
-        className="absolute left-[5%] top-0 flex flex-col gap-4 text-[10px] md:text-xs font-mono text-white/[0.03] whitespace-nowrap"
-        animate={{ y: [0, -1000] }}
-        transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-      >
-        {[...codeLines, ...codeLines, ...codeLines].map((line, i) => (
+      <div className="absolute left-[5%] top-0 flex flex-col gap-4 text-[10px] md:text-xs font-mono text-white/[0.03] whitespace-nowrap code-scroll-up">
+        {doubledLines.map((line, i) => (
           <div key={i}>{line}</div>
         ))}
-      </motion.div>
+      </div>
       
       {/* Right column - scrolling down (hidden on mobile) */}
-      <motion.div
-        className="absolute right-[5%] top-0 hidden md:flex flex-col gap-4 text-[10px] md:text-xs font-mono text-white/[0.03] whitespace-nowrap"
-        animate={{ y: [-1000, 0] }}
-        transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-      >
-        {[...codeLines.reverse(), ...codeLines, ...codeLines].map((line, i) => (
+      <div className="absolute right-[5%] top-0 hidden md:flex flex-col gap-4 text-[10px] md:text-xs font-mono text-white/[0.03] whitespace-nowrap code-scroll-down">
+        {doubledLines.map((line, i) => (
           <div key={i}>{line}</div>
         ))}
-      </motion.div>
+      </div>
       
       {/* Center column - scrolling up slowly (hidden until lg) */}
-      <motion.div
-        className="absolute left-1/2 -translate-x-1/2 top-0 flex flex-col gap-4 text-[10px] md:text-xs font-mono text-white/[0.02] whitespace-nowrap hidden lg:flex"
-        animate={{ y: [0, -800] }}
-        transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-      >
-        {[...codeLines, ...codeLines].map((line, i) => (
+      <div className="absolute left-1/2 -translate-x-1/2 top-0 flex-col gap-4 text-[10px] md:text-xs font-mono text-white/[0.02] whitespace-nowrap hidden lg:flex code-scroll-slow">
+        {doubledLines.map((line, i) => (
           <div key={i}>{line}</div>
         ))}
-      </motion.div>
+      </div>
     </div>
   );
-};
+});
 
 const Hero = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -694,10 +678,10 @@ const Footer = () => {
           <a className="text-on-surface-variant font-medium text-sm hover:text-white transition-colors" href="#">LinkedIn</a>
           <a className="text-on-surface-variant font-medium text-sm hover:text-white transition-colors" href="#">GitHub</a>
         </div>
-<div className="text-on-surface-variant text-sm text-center">
-    © 2026 Guesstures Editorial. All rights reserved. <br /> 
-    Designed by <a href="https://kupxzu.github.io/carlkupxzu-portfolio/" className="text-cyan-400 hover:text-cyan-300 transition-colors">KUPXZU</a> Guesstures Team.
-  </div>
+          <div className="text-on-surface-variant text-sm text-center">
+              © 2026 Guesstures Editorial. All rights reserved. <br /> 
+              Designed by <a href="https://kupxzu.github.io/carlkupxzu-portfolio/" className="text-cyan-400 hover:text-cyan-300 transition-colors">KUPXZU</a>  Guesstures Team.
+          </div>
       </div>
     </footer>
   );

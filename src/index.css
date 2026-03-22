@@ -34,3 +34,29 @@
 .text-gradient {
   @apply bg-clip-text text-transparent bg-gradient-to-br from-white to-on-surface-variant;
 }
+
+/* Optimized code background animations - GPU accelerated */
+@keyframes scrollUp {
+  0% { transform: translateY(0) translateZ(0); }
+  100% { transform: translateY(-50%) translateZ(0); }
+}
+
+@keyframes scrollDown {
+  0% { transform: translateY(-50%) translateZ(0); }
+  100% { transform: translateY(0) translateZ(0); }
+}
+
+.code-scroll-up {
+  animation: scrollUp 30s linear infinite;
+  will-change: transform;
+}
+
+.code-scroll-down {
+  animation: scrollDown 25s linear infinite;
+  will-change: transform;
+}
+
+.code-scroll-slow {
+  animation: scrollUp 40s linear infinite;
+  will-change: transform;
+}
