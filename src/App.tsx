@@ -420,7 +420,7 @@ const Hero = () => {
     {/* Right Side: Logo Display */}
     <div className="relative aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-300 flex items-center justify-center">
       <img 
-        src="/guesstures.jpg" 
+        src={`${import.meta.env.BASE_URL}guesstures.jpg`}
         alt="Guesturess Interlocking Diamonds Logo" 
         className="w-full h-auto drop-shadow-2xl"
       />
@@ -482,31 +482,31 @@ const Projects = () => {
     {
       title: "E-Commers Platform",
       category: "Digital Commerce",
-      image: "/dashboard.png",
+      image: `${import.meta.env.BASE_URL}dashboard.png`,
       span: "md:col-span-3"
     },
     {
       title: "Application Development",
       category: "Software Solutions",
-      image: "/android.png",
+      image: `${import.meta.env.BASE_URL}android.png`,
       span: "md:col-span-3"
     },
     {
       title: "Web/Applicaiton Development",
       category: "Full Stack",
-      image: "/webapp.png",
+      image: `${import.meta.env.BASE_URL}webapp.png`,
       span: "md:col-span-2"
     },
     {
       title: "Finest Unique Design UI/UX",
       category: "Creative Direction",
-      image: "/uiux.jpg",
+      image: `${import.meta.env.BASE_URL}uiux.jpg`,
       span: "md:col-span-2"
     },
     {
       title: "Game Development",
       category: "Immersive Media",
-      image: "/gamedev.png",
+      image: `${import.meta.env.BASE_URL}gamedev.png`,
       span: "md:col-span-2"
     }
   ];
