@@ -695,7 +695,7 @@ const Footer = () => {
           <a className="text-on-surface-variant font-medium text-sm hover:text-white transition-colors" href="#">GitHub</a>
         </div>
         <div className="text-on-surface-variant text-sm">
-          © 2026 Guesstures Editorial. All rights reserved.
+          © 2026 Guesstures Editorial. All rights reserved. <br /> Designed by <a href="https://kupxzu.github.io/guesstures/#about" className="text-on-surface-variant hover:text-white transition-colors">KUPXZU</a>Guesstures Team.
         </div>
       </div>
     </footer>
