@@ -390,11 +390,11 @@ const Hero = () => {
             </div>
 
             <h2 className="text-4xl md:text-5xl font-extrabold font-headline tracking-tight uppercase">
-              Guesturess
+              Guesstures
             </h2>
 
             <p className="text-on-surface-variant leading-relaxed text-lg">
-              GUESTURESS is the result of three dedicated programmers coming together to solve complex digital challenges. Our foundation is built on a shared obsession with clean code and high-performance architecture.
+              GUESSTURES is the result of three dedicated programmers coming together to solve complex digital challenges. Our foundation is built on a shared obsession with clean code and high-performance architecture.
             </p>
 
             {/* The 3 Diamonds Explanation */}
@@ -430,7 +430,7 @@ const Hero = () => {
           <div className="relative aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-300 flex items-center justify-center">
             <img
               src={`${import.meta.env.BASE_URL}guesstures.jpg`}
-              alt="Guesturess Interlocking Diamonds Logo"
+              alt="Guesstures Interlocking Diamonds Logo"
               className="w-full h-auto drop-shadow-2xl"
             />
           </div>
